@@ -67,24 +67,29 @@ export class CreardietaComponent implements OnInit {
         peso: this.dietaForm.get('peso')?.value,
       }
 
-
       var e = 0;
       const array = [];
       const num = [];
 
-      for (var i in entry.dieta) {
-        array.push(entry.dieta[i]);
-        const ar = array[e];
-        e += 1
-
-        if (ar.id_dieta === '' || ar.id_dieta === null || ar.id_dieta === undefined) {
+      if(entry.dieta.lenght !== 0){
+        for (var i in entry.dieta) {
+          array.push(entry.dieta[i]);
+          const ar = array[e];
+          e += 1
+  
+          if (ar.id_dieta === '' || ar.id_dieta === null || ar.id_dieta === undefined) {
+          }
+          else {
+            num.push(ar.id_dieta);
+          }
+  
         }
-        else {
-          num.push(ar.id_dieta);
-        }
-
         const max = Math.max.apply(null, num);
         DIETA.id_dieta = max + 1;
+      }
+
+      if (DIETA.id_dieta === -Infinity){
+        DIETA.id_dieta = 1;
       }
 
       console.log('objeto', DIETA);
