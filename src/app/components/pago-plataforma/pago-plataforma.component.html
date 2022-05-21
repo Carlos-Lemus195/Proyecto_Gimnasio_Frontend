@@ -1,0 +1,118 @@
+<!-- 
+                
+                <hr>
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <button routerLink="/login" type="reset" class="btn btn-default btn-lg btn-block">Cancel</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-success btn-lg btn-block" [disabled]="cardForm.invalid">Realizar Pago</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>                
+</div> -->
+<div class="modal">
+    <div class="modal__container">
+        <div class="modal__featured">
+            <button routerLink="/login" type="button" class="button--transparent button--close">
+                <svg class="nc-icon glyph" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32">
+                <g><path fill="#ffffff" d="M1.293,15.293L11,5.586L12.414,7l-8,8H31v2H4.414l8,8L11,26.414l-9.707-9.707 C0.902,16.316,0.902,15.684,1.293,15.293z"></path> </g></svg>
+                <span class="visuallyhidden">Return to Product Page</span>
+            </button>
+            <div>
+                <img src="../../../assets/pago_plataforma/images/gym.jpg" class="modal__circle" />
+            </div>
+        </div>
+
+        <div class="modal__content">
+            <h2>Your payment details</h2>
+
+            <form [formGroup]="cardForm" (ngSubmit)="realizarPago()">
+                <ul class="form-list">
+                    <li class="form-list__row">
+                        <label for="email">Email asociado a la cuenta</label>
+                        <input type="email" class="form-control" id="email" title="Email asociado a la cuenta a pagar" formControlName="email" (blur)="verificarEmail()" required="">
+                        <div class="text-danger" *ngIf="cardForm.get('email')?.hasError('required') && cardForm.get('email')?.touched">
+                            <span>El email <strong>es obligatorio</strong></span>
+                        </div>
+                    </li>
+
+                    <li class="form-list__row">
+                        <label for="cardHolder">Nombre Propietario</label>
+                        <input type="text" class="form-control" id="cardHolder" pattern="\w+ \w+.*" title="Primer y Segundo Nombre" formControlName="cardHolder" required="">
+                        <div class="text-danger" *ngIf="cardForm.get('cardHolder')?.hasError('required') && cardForm.get('cardHolder')?.touched">
+                            <span>El nombre <strong>es obligatorio</strong></span>
+                        </div>
+                    </li>
+
+                    <li class="form-list__row">
+                        <label for="cardNumber">Número de la Tarjeta</label>
+                        <div id="input--cc" class="creditcard-icon">
+                            <input type="number" class="form-control" id="cardNumber" autocomplete="off" title="Número de la tarjeta" formControlName="cardNumber" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="16" onblur='javascript: if(this.value.length != 16) alert("Asegurese de ingresar los 16 dígitos."), this.value = "";' (blur)="verificarTarjeta()" required="">
+                        </div>
+                        <div class="text-danger" *ngIf="cardForm.get('cardNumber')?.hasError('required') && cardForm.get('cardNumber')?.touched">
+                            <span>El número de la tarjeta <strong>es obligatorio</strong>.</span>
+                        </div>
+                        
+                    </li>
+
+                    <li class="form-list__row form-list__row--inline">
+                    
+                        <div>
+                            <label>Fecha de Expiración</label>
+                            <div class="form-list__input-inline">
+                                <input type="number" name="cc_month" placeholder="MM" formControlName="expMonth" required="" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" onblur='javascript: if(this.value.length != 2) alert("Asegurese de ingresar 2 dígitos."), this.value = "";'/>
+                                <input type="number" name="cc_year" placeholder="YY" formControlName="expYear" required="" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="2" onblur='javascript: if(this.value.length != 2) alert("Asegurese de ingresar 2 dígitos."), this.value = "";'/>
+                            </div>
+                        </div>
+                        <div>
+                            <label>CVC</label>
+                            <input title="Tres dígitos al reverso de la tarjeta" formControlName="cvc" type="number" name="cc_cvc" placeholder="123" required="" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="3" onblur='javascript: if(this.value.length != 3) alert("Asegurese de ingresar los 3 dígitos."), this.value = "";'/>
+                            <div class="text-danger" *ngIf="cardForm.get('cvc')?.hasError('required') && cardForm.get('cvc')?.touched">
+                                <span>El CVC <strong>es obligatorio</strong></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="form-group row">
+                            <label class="col-md-4">Mensualidad</label>
+                            <label class="col-md-4">Mora</label>
+                            <label class="col-md-4">Total a pagar</label>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div><span class="input-group-text">Q</span></div>
+                                    <input type="number" class="form-control" formControlName="mensualidad" [(ngModel)]="mensualidad" readonly>
+                                    <div><span class="input-group-text">.00</span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div><span class="input-group-text">Q</span></div>
+                                    <input type="number" class="form-control" formControlName="montoMora" [(ngModel)]="montoMora" readonly>
+                                    <div><span class="input-group-text">.00</span></div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <div><span class="input-group-text">Q</span></div>
+                                    <input type="number" class="form-control" formControlName="total" [(ngModel)]="montoTotal" readonly>
+                                    <div><span class="input-group-text">.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <br>
+
+                    <li>
+                        <button type="submit" class="button" [disabled]="cardForm.invalid">Realizar Pago</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>
